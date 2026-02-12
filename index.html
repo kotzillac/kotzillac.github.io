@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { background: #111; height: 100vh; overflow: hidden; margin: 0; }
+
+  /* Карточка */
+  .card {
+    position: absolute;
+    width: 280px;
+    /* Эффект стекла */
+    background: rgba(255, 255, 255, 0.05); /* Очень слабый белый фон */
+    backdrop-filter: blur(15px);           /* Размытие фона за картой */
+    -webkit-backdrop-filter: blur(15px);    /* Поддержка Safari */
+  
+    /* Граница и свечение */
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  
+    color: white;
+    padding: 16px;
+    border-radius: 16px; /* Чуть мягче углы */
+    cursor: grab;
+    font-family: sans-serif;
+    transition: transform 0.1s ease-out;
+    transform-style: preserve-3d;
+}
+
+  .rpc { display: flex; align-items: center; gap: 12px; pointer-events: none; }
+  
+  img { width: 64px; height: 64px; border-radius: 8px; background: #333; }
+  
+  .info { line-height: 1.4; }
+  .details { font-weight: bold; font-size: 14px; }
+  .state { font-size: 12px; color: #b5bac1; }
+</style>
+</head>
+<body>
+
+<div id="card" class="card" style="top: 100px; left: 100px;">
+    <div id="profile" style="display: flex; align-items: flex-start;">
+        <img src="https://placehold.co/128x128" id="profile_avatar" style="border-radius: 50%;">
+        <span style="font-size: 1.3rem; margin-top: 5px; margin-left: 10px;" id="profile_name">
+            ! test
+        </span>
+    </div>
+  <div class="rpc" style="margin-top: 20px; margin-left: 10px; width: fit-content; position: relative;">
+    <div id="name" style="font-size: 0.6rem; position: absolute; top: 0px; margin-top: -15px;">hello</div>
+    <img src="https://via.placeholder.com" id="RPC_logo" style="border-radius: 8px; margin-bottom: 5px;">
+    <div class="info">
+      <div class="details">Playing Game</div>
+      <div class="state">Doing something cool...</div>
+    </div>
+  </div>
+  <div class="links">
+    
+  </div>
+</div>
+
+<script>
+  const card = document.getElementById('card');
+  let isDragging = false;
+  let startX, startY;
+
+  function centerCard() {
+    if (isDragging) return; // Не центрируем, пока тащим
+    const x = (window.innerWidth - card.offsetWidth) / 2;
+    const y = (window.innerHeight - card.offsetHeight) / 2;
+    card.style.left = x + 'px';
+    card.style.top = y + 'px';
+  }
+
+  card.onmousemove = (e) => {
+    if (isDragging) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotX = (rect.height / 2 - y) / 8;
+    const rotY = (x - rect.width / 2) / 8;
+    card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  };
+
+  card.onmouseleave = () => {
+    if (!isDragging) card.style.transform = `perspective(1000px) rotateX(0) rotateY(0)`;
+  };
+
+  card.onmousedown = (e) => {
+    isDragging = true;
+    startX = e.clientX - card.offsetLeft;
+    startY = e.clientY - card.offsetTop;
+    card.style.transition = "none";
+  };
+
+  document.onmousemove = (e) => {
+    if (!isDragging) return;
+    card.style.left = (e.clientX - startX) + 'px';
+    card.style.top = (e.clientY - startY) + 'px';
+  };
+
+  document.onmouseup = () => {
+    isDragging = false;
+    card.style.transition = "transform 0.1s ease-out";
+  };
+  centerCard()
+</script>
+
+<canvas id="seasonal_canvas"></canvas>
+<script src="discord.js"></script>
+<script src="snowflakes.js"></script>
+
+</body>
+</html>
