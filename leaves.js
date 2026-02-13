@@ -19,7 +19,27 @@ window.addEventListener('mousemove', (e) => {
 });
 
 function cacheLeaves() {
-    leafTypes.forEach()
+    leafTypes.forEach(emoji => {
+        sizes.forEach(size => {
+            const offCanvas = document.createElement("canvas");
+
+            const padding = size * 1.5;
+            offCanvas.width = padding;
+            offCanvas.height = padding;
+
+            const offCtx = offCanvas.getContext("2d");
+            offCtx.textAlign = 'center';
+            offCtx.textBaseline = 'middle';
+            offCtx.font = `${size}px system-ui`
+            offCtx.fillText(emoji, padding / 2, padding / 2);
+
+            leafCache.push({
+                img: offCanvas,
+                size: size,
+                emoji: emoji
+            });
+        });
+    });
 }
 
 function init_leaves() {
@@ -30,24 +50,28 @@ function init_leaves() {
 
     leaves = []
     
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < 100; i++) {
         leaves.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: randint(20, 40),
+            rotation: Math.random() * Math.PI * 2,
+            emoji: leafCache[Math.floor(Math.random() * leafCache.length)],
             speed: Math.random() * 1,
-            wind: Math.random() * 1 - 0.5
+            spin_speed: Math.random() * 0.04 - 0.02,
+            wind: Math.random() * 1.75 - 0.5
         })
     }
 }
 
 function draw() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.beginPath();
+    ctx.clearRect(0, 0, width, height); 
     for (let leaf of leaves) {
-        ctx.moveTo(leaf.x, leaf.y);
-        ctx.font = `${leaf.radius}px system-ui`
-        ctx.fillText("🍁", leaf.x, leaf.y)
+        ctx.save();
+        ctx.translate(leaf.x, leaf.y)
+        ctx.rotate(leaf.rotation);
+        const offset = -leaf.emoji.size / 2;
+        ctx.drawImage(leaf.emoji.img, offset, offset);
+        ctx.restore();
     }
     ctx.fill();
     update();
@@ -58,14 +82,15 @@ function update() {
     mouse.vy *= 0.95
     
     for (let leaf of leaves) {
-        leaf.y += Math.cos(leaf.speed) + 1 + leaf.radius / 2;
+        leaf.y += Math.cos(leaf.speed) + 1 + leaf.emoji.size / 8;
         leaf.x += leaf.wind;
+        leaf.rotation += leaf.spin_speed;
 
         let dx = leaf.x - mouse.x;
         let dy = leaf.y - mouse.y;
         let distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 50) {
+        if (distance < 80) {
             leaf.x += mouse.vx * 0.2
             leaf.y += mouse.vy * 0.2
         }
@@ -80,5 +105,6 @@ function update() {
 }
 
 window.addEventListener('resize', init_leaves);
+cacheLeaves();
 init_leaves();
 setInterval(draw, 20);

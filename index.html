@@ -4,22 +4,19 @@
 <style>
   body { background: #111; height: 100vh; overflow: hidden; margin: 0; }
 
-  /* Карточка */
   .card {
     position: absolute;
     width: 280px;
-    /* Эффект стекла */
-    background: rgba(255, 255, 255, 0.05); /* Очень слабый белый фон */
-    backdrop-filter: blur(15px);           /* Размытие фона за картой */
-    -webkit-backdrop-filter: blur(15px);    /* Поддержка Safari */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
   
-    /* Граница и свечение */
     border: 1px solid rgba(255, 255, 255, 0.1); 
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
   
     color: white;
     padding: 16px;
-    border-radius: 16px; /* Чуть мягче углы */
+    border-radius: 16px;
     cursor: grab;
     font-family: sans-serif;
     transition: transform 0.1s ease-out;
@@ -33,28 +30,69 @@
   .info { line-height: 1.4; }
   .details { font-weight: bold; font-size: 14px; }
   .state { font-size: 12px; color: #b5bac1; }
+
+  .links {
+    display: flex;
+    gap: 12px;
+    padding: 10px;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .social-link img {
+    width: 24px;
+    height: 24px;
+    filter: invert(1);
+    opacity: 0.8;
+  }
+
+  .social-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px); /* Легкий подъем вверх */
+  }
+
 </style>
 </head>
 <body>
 
-<div id="card" class="card" style="top: 100px; left: 100px;">
+<div id="card" class="card" style="top: 100px; left: 100px; width: max-content; min-width: 314px; transition: transform 0.1s ease-out;">
     <div id="profile" style="display: flex; align-items: flex-start;">
         <img src="https://placehold.co/128x128" id="profile_avatar" style="border-radius: 50%;">
         <span style="font-size: 1.3rem; margin-top: 5px; margin-left: 10px;" id="profile_name">
             ! test
         </span>
     </div>
-  <div class="rpc" style="margin-top: 20px; margin-left: 10px; width: fit-content; position: relative;">
-    <div id="name" style="font-size: 0.6rem; position: absolute; top: 0px; margin-top: -15px;">hello</div>
+  <div class="rpc" style="margin-top: 20px; margin-left: 10px; width: max-content; position: relative;">
+    <div id="name" style="font-size: 0.6rem; position: absolute; top: 0px; margin-top: -15px; white-space: nowrap;">Placeholder</div>
     <img src="https://via.placeholder.com" id="RPC_logo" style="border-radius: 8px; margin-bottom: 5px;">
     <div class="info">
-      <div class="details">Playing Game</div>
-      <div class="state">Doing something cool...</div>
+      <div class="details">Placeholder</div>
+      <div class="state">Placeholder</div>
     </div>
   </div>
+  <!--
   <div class="links">
-    
+    <a href="https://steamcommunity.com/id/kotzillac/" class="social-link">
+      <img src="steam_logo.svg" style="width: 32px; height: 32px;">
+    </a>
+    <a href="https://discord.com/users/868892102254288936" class="social-link">
+      <img src="discord_logo.svg" style="width: 32px; height: 32px;">
+    </a>
+    <a href="https://kotzillac.t.me" class="social-link">
+      <img src="telegram_logo.svg" style="width: 32px; height: 32px;">
+    </a>
   </div>
+  -->
 </div>
 
 <script>
@@ -63,7 +101,6 @@
   let startX, startY;
 
   function centerCard() {
-    if (isDragging) return; // Не центрируем, пока тащим
     const x = (window.innerWidth - card.offsetWidth) / 2;
     const y = (window.innerHeight - card.offsetHeight) / 2;
     card.style.left = x + 'px';
@@ -105,6 +142,7 @@
 </script>
 
 <canvas id="seasonal_canvas"></canvas>
+<script src="https://cdn.jsdelivr.net/gh/0x5841524f4e/js-lanyard/lanyard.js"></script>
 <script src="discord.js"></script>
 <script src="snowflakes.js"></script>
 

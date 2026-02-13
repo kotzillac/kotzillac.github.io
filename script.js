@@ -1,0 +1,1 @@
+// let counters = {"kotzilla_scripts": {"loaded": 1, "needed": 3}, "lanyard": {"loaded": 0, "needed": 1}}
